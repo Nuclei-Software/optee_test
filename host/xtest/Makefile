@@ -47,8 +47,10 @@ else #OPTEE_OPENSSL_EXPORT
 CFLAGS += -I../openssl/include
 ifeq ($(call cc-bits, $(call cc-arch, $(CC))),32)
 LDFLAGS += ../openssl/lib/arm/libcrypto.a -ldl
-else
+else ifeq ($(call cc-bits, $(call cc-arch, $(CC))),64)
 LDFLAGS += ../openssl/lib/aarch64/libcrypto.a -ldl
+else
+LDFLAGS += ../openssl/lib/rv64/libcrypto.a -ldl
 endif
 endif #OPTEE_OPENSSL_EXPORT
 endif #require OpenSSL
