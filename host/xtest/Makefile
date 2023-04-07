@@ -50,7 +50,14 @@ LDFLAGS += ../openssl/lib/arm/libcrypto.a -ldl
 else ifeq ($(call cc-bits, $(call cc-arch, $(CC))),64)
 LDFLAGS += ../openssl/lib/aarch64/libcrypto.a -ldl
 else
-LDFLAGS += ../openssl/lib/rv64/libcrypto.a -ldl
+MACH ?= rv64imac
+MABI ?= lp64
+CFLAGS += -march=$(MARCH) -mabi=$(MABI)
+ifeq ($(MABI),lp64)
+LDFLAGS += ../openssl/lib/rv64/libcrypto_softfloat.a -ldl
+else
+LDFLAGS += ../openssl/lib/rv64/libcrypto_doublefloat.a -ldl
+endif
 endif
 endif #OPTEE_OPENSSL_EXPORT
 endif #require OpenSSL
